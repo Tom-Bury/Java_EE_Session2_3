@@ -10,3 +10,5 @@
 /CarRental-client/dist/
 /CarRental/dist/
 *.class
+
+*.properties
