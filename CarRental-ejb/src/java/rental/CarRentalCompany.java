@@ -8,19 +8,36 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class CarRentalCompany {
 
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
+    
+    @Id
     private String name;
+    
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Car> cars;
+    
+    @OneToMany(cascade = CascadeType.REMOVE)
+    // moet dit persistent zijn? Wat als een auto verwijderd wordt en deze de laatste van een bep type was?
     private Set<CarType> carTypes = new HashSet<CarType>();
-	private List<String> regions;
+    
+    private List<String> regions;
 
 	
     /***************
      * CONSTRUCTOR *
      ***************/
+        
+    public CarRentalCompany() {
+        
+    }
 
     public CarRentalCompany(String name, List<String> regions, List<Car> cars) {
         logger.log(Level.INFO, "<{0}> Starting up CRC {0} ...", name);

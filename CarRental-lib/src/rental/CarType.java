@@ -1,19 +1,31 @@
 package rental;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
 public class CarType implements Serializable{
     
-    private String name;
+    @Id
+    private int id;
+        
+    private String name;   
     private int nbOfSeats;
     private boolean smokingAllowed;
     private double rentalPricePerDay;
     //trunk space in liters
     private float trunkSpace;
+
+
+
     
     /***************
      * CONSTRUCTOR *
      ***************/
+    
+    public CarType() {
+    }
     
     public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed) {
         this.name = name;
@@ -76,5 +88,13 @@ public class CarType implements Serializable{
         } else if (!name.equals(other.name))
             return false;
 	return true;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
