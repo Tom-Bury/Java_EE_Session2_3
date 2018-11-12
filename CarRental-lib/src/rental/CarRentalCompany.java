@@ -12,6 +12,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import rental.Car;
+import rental.CarType;
+import rental.Quote;
+import rental.Reservation;
+import rental.ReservationConstraints;
+import rental.ReservationException;
 
 @Entity
 public class CarRentalCompany {

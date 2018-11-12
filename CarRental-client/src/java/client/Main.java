@@ -1,5 +1,7 @@
 package client;
 
+import client.DataLoader.CrcData;
+import static client.DataLoader.loadData;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import rental.ReservationException;
 import session.CarRentalSessionRemote;
 import session.ManagerSessionRemote;
 import rental.Car;
+import rental.CarRentalCompany;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
@@ -26,6 +29,19 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
+        
+        CrcData hertzData = loadData("hertz.csv");
+        CarRentalCompany hertz = new CarRentalCompany(hertzData.name, hertzData.regions, hertzData.cars);
+        
+        CrcData dockxData = loadData("dockx.csv");
+        CarRentalCompany dockx = new CarRentalCompany(dockxData.name, dockxData.regions, dockxData.cars);
+        
+        Main main = new Main("trips");
+        
+        ManagerSessionRemote initialMngr = main.getNewManagerSession("initialMngr", "allInitialCompanies");
+        initialMngr.registerCompany(hertz);
+        initialMngr.registerCompany(dockx);
+               
         new Main("trips").run();
     }
     
@@ -104,60 +120,5 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     }
     
     
-    
-    
-   /********************
-    * LOADING THE DATA *
-    ********************/
-    
-    
-    public static CrcData loadData(String datafile)
-            throws ReservationException, NumberFormatException, IOException {
-
-        CrcData out = new CrcData();
-        int nextuid = 0;
-
-        // open file
-        BufferedReader in = new BufferedReader(new FileReader(datafile));
-        StringTokenizer csvReader;
-
-        try {
-            // while next line exists
-            while (in.ready()) {
-                String line = in.readLine();
-
-                if (line.startsWith("#")) {
-                    // comment -> skip
-                } else if (line.startsWith("-")) {
-                    csvReader = new StringTokenizer(line.substring(1), ",");
-                    out.name = csvReader.nextToken();
-                    out.regions = Arrays.asList(csvReader.nextToken().split(":"));
-                } else {
-                    // tokenize on ,
-                    csvReader = new StringTokenizer(line, ",");
-                    // create new car type from first 5 fields
-                    CarType type = new CarType(csvReader.nextToken(),
-                            Integer.parseInt(csvReader.nextToken()),
-                            Float.parseFloat(csvReader.nextToken()),
-                            Double.parseDouble(csvReader.nextToken()),
-                            Boolean.parseBoolean(csvReader.nextToken()));
-                    System.out.println(type);
-                    // create N new cars with given type, where N is the 5th field
-                    for (int i = Integer.parseInt(csvReader.nextToken()); i > 0; i--) {
-                        out.cars.add(new Car(nextuid++, type));
-                    }
-                }
-            }
-        } finally {
-            in.close();
-        }
-
-        return out;
-    }
-
-    static class CrcData {
-        public List<Car> cars = new LinkedList<Car>();
-        public String name;
-        public List<String> regions =  new LinkedList<String>();
-    }
+ 
 }
