@@ -110,16 +110,7 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
         printMethodInfo("getCheapestCarType");
-        
-        List<String> result = session.getCheapestCarType(start, end, region);
-        
-        System.out.println("Cheapest car type is: ");
-        
-        for (String str : result) {
-            System.out.println(str);
-        }
-        
-        return "ok";
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     
