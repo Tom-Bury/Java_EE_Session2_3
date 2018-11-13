@@ -1,10 +1,13 @@
 package rental;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -12,9 +15,10 @@ import rental.CarType;
 import rental.Reservation;
 
 @Entity
-public class Car {
+public class Car implements Serializable{
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
     
     @OneToOne(cascade=CascadeType.REMOVE)

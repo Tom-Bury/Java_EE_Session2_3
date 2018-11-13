@@ -6,14 +6,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @MappedSuperclass
 public class Quote implements Serializable {
     
-    @Id //@GeneratedValue(GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    
+    @Temporal(TemporalType.DATE)
     private Date endDate;
     private String carRenter;
     private String rentalCompany;
