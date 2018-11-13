@@ -1,10 +1,14 @@
 package session;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import rental.Car;
@@ -20,9 +24,40 @@ public class ManagerSession implements ManagerSessionRemote {
     EntityManager em;
     
     @Override
-    public void registerCompany(CarRentalCompany crc) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void registerCompany(List<Car> cars, String name, List<String> regions) {
+        
+        for (Car c : cars) {
+            em.persist(c.getType());
+            System.out.println("Persisted cartype: " + c.getType().getName());
+        }
+        
+        for (Car c : cars) {
+            em.persist(c);
+            System.out.println("Persisted car: " + c.toString());
+        }
+        
+        em.persist(new CarRentalCompany(name, regions, cars));
+        /*
+        CarRentalCompany crc = new CarRentalCompany(name, regions, new ArrayList<Car>());
         em.persist(crc);
+        
+        for (Car car : cars) {
+            storeAtCompanyWithRef(car, crc);
+        }
+        */
     }
+    
+    /*    
+    private void storeAtCompanyWithRef(Car car, CarRentalCompany carRentalCompany) {
+        CarType carType = em.find(CarType.class, car.getType().getId());
+        if (carType != null) {
+            car.setType(carType);
+        }
+
+        carRentalCompany.addCar(car);
+    }   
+    */
     
     @Override
     public Set<CarType> getCarTypes(String company) {
@@ -71,5 +106,7 @@ public class ManagerSession implements ManagerSessionRemote {
         }
         return out.size();
     }
+    
+    
 
 }

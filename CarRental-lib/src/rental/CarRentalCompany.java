@@ -1,6 +1,7 @@
 package rental;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -11,25 +12,32 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
-public class CarRentalCompany implements Serializable {
+public class CarRentalCompany implements Serializable{
 
     private static final Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     
     @Id
     private String name;
     
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<Car> cars;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy="crc")
+//    private List<Car> cars = new ArrayList<Car>();
+//    
+//    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "crc")
+//    private Set<CarType> carTypes = new HashSet<CarType>();
     
-    @OneToMany(cascade = CascadeType.REMOVE)
-    // moet dit persistent zijn? Wat als een auto verwijderd wordt en deze de laatste van een bep type was?
+    @OneToMany
+    private List<Car> cars = new ArrayList<Car>();
+    
+    @OneToMany
     private Set<CarType> carTypes = new HashSet<CarType>();
     
-    private List<String> regions;
+    private List<String> regions = new ArrayList<String>();
 
 	
     /***************
@@ -46,8 +54,12 @@ public class CarRentalCompany implements Serializable {
         this.cars = cars;
         setRegions(regions);
         for (Car car : cars) {
-            carTypes.add(car.getType());
+//            car.setCrc(this);
+            CarType type = car.getType();
+//            type.setCrc(this);
+            carTypes.add(type);
         }
+        
     }
 
     /********
@@ -147,6 +159,10 @@ public class CarRentalCompany implements Serializable {
         return availableCars;
     }
 
+    public void addCar(Car c) {
+        this.cars.add(c);
+        this.carTypes.add(c.getType());
+    }
     /****************
      * RESERVATIONS *
      ****************/

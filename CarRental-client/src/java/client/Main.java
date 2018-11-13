@@ -31,17 +31,18 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         // TODO: use updated manager interface to load cars into companies
         
         CrcData hertzData = loadData("hertz.csv");
-        CarRentalCompany hertz = new CarRentalCompany(hertzData.name, hertzData.regions, hertzData.cars);
+        //CarRentalCompany hertz = new CarRentalCompany(hertzData.name, hertzData.regions, hertzData.cars);
         
         CrcData dockxData = loadData("dockx.csv");
-        CarRentalCompany dockx = new CarRentalCompany(dockxData.name, dockxData.regions, dockxData.cars);
+        //CarRentalCompany dockx = new CarRentalCompany(dockxData.name, dockxData.regions, dockxData.cars);
         
         Main main = new Main("trips");
         
         ManagerSessionRemote initialMngr = main.getNewManagerSession("initialMngr", "allInitialCompanies");
-        initialMngr.registerCompany(hertz);
-        initialMngr.registerCompany(dockx);
-               
+        initialMngr.registerCompany( hertzData.cars, hertzData.name, hertzData.regions);
+        initialMngr.registerCompany( dockxData.cars, dockxData.name, dockxData.regions);
+        
+        System.out.println("=== START OF THE trips SCRIPT ===");
         new Main("trips").run();
     }
     

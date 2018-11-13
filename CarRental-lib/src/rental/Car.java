@@ -6,9 +6,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import rental.CarType;
@@ -21,12 +24,16 @@ public class Car implements Serializable{
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
     
-    @OneToOne(cascade=CascadeType.REMOVE)
+    @ManyToOne
     private CarType type;
     
     @OneToMany(cascade=CascadeType.REMOVE)
     private Set<Reservation> reservations;
-
+    
+//    @ManyToOne
+//    private CarRentalCompany crc;
+    
+    
     /***************
      * CONSTRUCTOR *
      ***************/
@@ -36,7 +43,7 @@ public class Car implements Serializable{
     }
     
     public Car(int uid, CarType type) {
-    	this.id = uid;
+    	//this.id = uid;
         this.type = type;
         this.reservations = new HashSet<Reservation>();
     }
@@ -57,9 +64,10 @@ public class Car implements Serializable{
         return type;
     }
 	
-	public void setType(CarType type) {
-		this.type = type;
-	}
+    public void setType(CarType type) {
+	this.type = type;
+    }
+    
     /****************
      * RESERVATIONS *
      ****************/
@@ -88,4 +96,21 @@ public class Car implements Serializable{
     public Set<Reservation> getReservations() {
         return reservations;
     }
+
+
+    
+    
+    /***********
+     * COMPANY *
+     ***********/
+    
+//    public CarRentalCompany getCrc() {
+//        return crc;
+//    }
+//
+//    public void setCrc(CarRentalCompany crc) {
+//        this.crc = crc;
+//    }
+    
+    
 }
