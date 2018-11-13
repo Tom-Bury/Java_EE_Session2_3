@@ -109,7 +109,17 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("getCheapestCarType");
+        
+        List<String> result = session.getCheapestCarType(start, end, region);
+        
+        System.out.println("Cheapest car type is: ");
+        
+        for (String str : result) {
+            System.out.println(str);
+        }
+        
+        return "ok";
     }
     
     
@@ -146,7 +156,11 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected int getNumberOfReservationsForCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("getNbOfReservationsForCarType");
+        int result = ms.getNumberOfReservations(carRentalName, carType);
+        
+        System.out.println("\tNumber of reservations for " + carType + " in " + carRentalName + ": " + result);
+        return result;
     }
     
     

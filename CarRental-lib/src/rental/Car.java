@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,9 +30,7 @@ public class Car implements Serializable{
     
     @OneToMany(cascade=CascadeType.REMOVE)
     private Set<Reservation> reservations;
-    
-//    @ManyToOne
-//    private CarRentalCompany crc;
+
     
     
     /***************
@@ -111,6 +110,18 @@ public class Car implements Serializable{
 //    public void setCrc(CarRentalCompany crc) {
 //        this.crc = crc;
 //    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (!(obj instanceof Car)) {
+//            return false;
+//        }
+//        else {
+//            return this.getId() == ((Car) obj).getId();
+//        }
+//    }
+    
+    
     
     
 }

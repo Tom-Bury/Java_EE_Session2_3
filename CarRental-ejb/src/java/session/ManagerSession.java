@@ -31,17 +31,23 @@ public class ManagerSession implements ManagerSessionRemote {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void registerCompany(List<Car> cars, String name, List<String> regions) {
         
-        for (Car c : cars) {
-            em.persist(c.getType());
-//            System.out.println("Persisted cartype: " + c.getType().getName());
-        }
+//        for (Car c : cars) {
+//            em.persist(c.getType());
+////            System.out.println("Persisted cartype: " + c.getType().getName());
+//        }
+//        
+//        for (Car c : cars) {
+//            em.persist(c);
+////            System.out.println("Persisted car: " + c.toString());
+//        }
+        
+        CarRentalCompany crc  = new CarRentalCompany(name, regions, new ArrayList<Car>());
+
+        em.persist(crc);
         
         for (Car c : cars) {
-            em.persist(c);
-//            System.out.println("Persisted car: " + c.toString());
+            crc.addCar(c);
         }
-        
-        em.persist(new CarRentalCompany(name, regions, cars));
         /*
         CarRentalCompany crc = new CarRentalCompany(name, regions, new ArrayList<Car>());
         em.persist(crc);
@@ -99,16 +105,12 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public int getNumberOfReservations(String company, String type) {
-        Set<Reservation> out = new HashSet<Reservation>();
-        try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
-                out.addAll(c.getReservations());
-            }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-        return out.size();
+        Long result = (Long) em.createNamedQuery("getNbReservations")
+                .setParameter("crcName", company)
+                .setParameter("carType", type)
+                .getSingleResult();
+        
+        return result.intValue();
     }
     
     

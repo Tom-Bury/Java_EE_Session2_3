@@ -35,6 +35,20 @@ public class CarRentalSession implements CarRentalSessionRemote {
     }
 
     @Override
+    public List<String> getCheapestCarType(Date start, Date end, String region) {
+        List<String> result = em.createNamedQuery("cheapestCarType")
+                .setParameter("region", region)
+                .setParameter("startDate", start)
+                .setParameter("endDate", end)
+                .getResultList();
+                
+//                .setParameter("startDate", start)
+//                .setParameter("endDate", end)
+        
+        return result;
+    }
+    
+    @Override
     public Set<String> getAllRentalCompanies() {
         List<String> resultList = em.createNamedQuery("allCrcNames").getResultList();
         Set<String> resultSet = new HashSet<String>();

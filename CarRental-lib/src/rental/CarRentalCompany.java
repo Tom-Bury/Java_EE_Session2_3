@@ -31,8 +31,23 @@ import javax.persistence.Transient;
     @NamedQuery (
             name = "allCrcNames",
             query = "SELECT crc.name FROM CarRentalCompany crc"
-    )
-
+    ),
+    
+//    @NamedQuery (
+//            name = "cheapestCarType",
+//            query = "SELECT ct.name, MIN(ct.rentalPricePerDay) "
+//                    + "FROM CarRentalCompany crc, IN(crc.carTypes) ct "
+//                    + "WHERE crc.regions.contains(:region) "
+//                    + "AND crc.isAvailable(ct, :start, :end)")
+//    
+    @NamedQuery (
+            name = "getNbReservations",
+            query = "SELECT COUNT(resv) "
+                    + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
+                    + "WHERE crc.name = :crcName "
+                    + "AND car.type.name = :carType")
+    
+    
 
 })
 
@@ -53,10 +68,10 @@ public class CarRentalCompany implements Serializable{
 //    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "crc")
 //    private Set<CarType> carTypes = new HashSet<CarType>();
     
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Car> cars = new ArrayList<Car>();
     
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
     
     private List<String> regions = new ArrayList<String>();
@@ -182,6 +197,14 @@ public class CarRentalCompany implements Serializable{
     }
 
     public void addCar(Car c) {
+//        if (c.getCrc() != this) {
+//            c.setCrc(this);
+//        }
+//        
+//        if (c.getType().getCrc() != this) {
+//            c.getType().setCrc(this);
+//        }
+        
         this.cars.add(c);
         this.carTypes.add(c.getType());
     }
@@ -243,5 +266,8 @@ public class CarRentalCompany implements Serializable{
         }
         return out;
     }
+
+
+
 }
 
