@@ -23,18 +23,22 @@ public class ManagerSession implements ManagerSessionRemote {
     @PersistenceContext
     EntityManager em;
     
+    private List<CarRentalCompany> getAllCrcs() {
+        return em.createNamedQuery("allCrcs").getResultList();
+    }
+    
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void registerCompany(List<Car> cars, String name, List<String> regions) {
         
         for (Car c : cars) {
             em.persist(c.getType());
-            System.out.println("Persisted cartype: " + c.getType().getName());
+//            System.out.println("Persisted cartype: " + c.getType().getName());
         }
         
         for (Car c : cars) {
             em.persist(c);
-            System.out.println("Persisted car: " + c.toString());
+//            System.out.println("Persisted car: " + c.toString());
         }
         
         em.persist(new CarRentalCompany(name, regions, cars));

@@ -14,8 +14,30 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
+// ALL QUERIES INVOLVING A CARRENTALCOMPANY
+@NamedQueries({ 
+
+
+    @NamedQuery (
+            name = "allCrcs",
+            query = "SELECT crc FROM CarRentalCompany crc"
+    ),
+    
+    @NamedQuery (
+            name = "allCrcNames",
+            query = "SELECT crc.name FROM CarRentalCompany crc"
+    )
+
+
+})
+
+
+
 
 @Entity
 public class CarRentalCompany implements Serializable{
@@ -222,3 +244,4 @@ public class CarRentalCompany implements Serializable{
         return out;
     }
 }
+

@@ -20,6 +20,7 @@ import session.CarRentalSessionRemote;
 import session.ManagerSessionRemote;
 import rental.Car;
 import rental.CarRentalCompany;
+import rental.Quote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
@@ -42,7 +43,7 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         initialMngr.registerCompany( hertzData.cars, hertzData.name, hertzData.regions);
         initialMngr.registerCompany( dockxData.cars, dockxData.name, dockxData.regions);
         
-        System.out.println("=== START OF THE trips SCRIPT ===");
+        System.out.println("\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%% START OF THE trips SCRIPT %%%%%%%%%%%%%%%%%%%%%%%%%%%");
         new Main("trips").run();
     }
     
@@ -54,12 +55,14 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
      @Override
     protected CarRentalSessionRemote getNewReservationSession(String name) throws Exception {
+         printMethodInfo("getNewReservationSession");
+        
         // De volgende code is overgenomen van de opgave sessie EE-1 deel 3.3
         InitialContext context = new InitialContext();
         CarRentalSessionRemote session = (CarRentalSessionRemote) context.lookup(CarRentalSessionRemote.class.getName());
         session.setRenterName(name);
         
-        System.out.println("\nCLIENT MAIN: started new reservationSession by " + name + "\n");
+        System.out.println("\tSuccesfully started new reservationSession by " + name + "\n");
         
         return session;
     }
@@ -67,20 +70,44 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
     @Override
     protected void checkForAvailableCarTypes(CarRentalSessionRemote session, Date start, Date end) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("checkForAvailableCarTypes");
+        
+        System.out.println("From " + start + " to " + end + " are available:\n");
+        for(CarType ct : session.getAvailableCarTypes(start, end))
+            System.out.println("\t" + ct.toString());
+            System.out.println();
     }
 
     @Override
     protected void addQuoteToSession(CarRentalSessionRemote session, String name, Date start, Date end, String carType, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("addQuoteToSession");
+        
+        ReservationConstraints reservationConstraints = new ReservationConstraints(start, end, carType, region);
+        Quote q = session.createQuote(reservationConstraints);
+        
+        System.out.println("--Quote created!--");
+        System.out.println(q.toString());
+            
+        
     }
 
     @Override
     protected List<Reservation> confirmQuotes(CarRentalSessionRemote session, String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("confirmQuotes");
+        
+        List<Reservation> reservations = session.confirmQuotes();
+        
+        System.out.println("Made the following reservations:\n");
+        
+        for (Reservation r : reservations) {
+            System.out.println("\t" + r.toString());
+        }
+        
+        return reservations;
     }
     
-       @Override
+    
+    @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -91,11 +118,13 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
         @Override
     protected ManagerSessionRemote getNewManagerSession(String name, String carRentalName) throws Exception {
+            printMethodInfo("getNewManagerSession");
+        
         // De volgende code is overgenomen van de opgave sessie EE-1 deel 3.3
         InitialContext context = new InitialContext();
         ManagerSessionRemote session = (ManagerSessionRemote) context.lookup(ManagerSessionRemote.class.getName());
         
-        System.out.println("\nCLIENT MAIN: started new managersession");
+        System.out.println("\tSuccesfully started new managersession");
         
         return session;
     }    
@@ -122,4 +151,8 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
     
  
+    
+    private void printMethodInfo(String methodName) {
+        System.out.println("\n\n\n============ " + methodName +" ============\n" );
+    }
 }
