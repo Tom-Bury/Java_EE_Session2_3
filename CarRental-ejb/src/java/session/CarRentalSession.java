@@ -56,6 +56,7 @@ public class CarRentalSession implements CarRentalSessionRemote {
         return resultSet;
     }
     
+    
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         List<CarRentalCompany> allCrcs = getAllCrcs();
@@ -70,6 +71,30 @@ public class CarRentalSession implements CarRentalSessionRemote {
         result.addAll(availableTypes);
         return result;
     }
+    
+    /*
+    @Override
+    public List<CarType> getAvailableCarTypes(Date start, Date end) {
+        List<CarRentalCompany> allCrcs = em.createNamedQuery("allCrc").getResultList();
+        Set<CarType> availableTypes = new HashSet<CarType>();
+        
+        for (CarRentalCompany crc : allCrcs) {
+            List<CarType> resultList = em.createNamedQuery("allAvailableCarTypesOfCompany")
+                .setParameter("companyName", crc)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList()
+                ;
+            availableTypes.addAll(resultList);
+        }
+        
+        List<CarType> result = new ArrayList<CarType>();
+        result.addAll(availableTypes);
+        return result;
+        
+    }
+    */
+    
 
     @Override
     public Quote createQuote(ReservationConstraints constraints) throws ReservationException {

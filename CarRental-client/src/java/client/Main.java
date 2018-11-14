@@ -132,17 +132,35 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Set<String> bestClients = ms.getBestCustomers();
+
+        System.out.println("The best clients across all car rental companies are: ");
+        for (String client : bestClients) {
+            System.out.println(client);
+        }
+
+        return bestClients;
+
     }
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CarType mostPopular = ms.getMostPopularCarType(carRentalCompanyName, year);
+
+        System.out.println("Most popular car type in company " + carRentalCompanyName + " in year " + year +
+                " is: " + mostPopular.getName());
+
+        return mostPopular;
     }
 
     @Override
     protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int nbRes = ms.getNbOfReservationsBy(clientName);
+        return nbRes;
+
     }
 
     @Override

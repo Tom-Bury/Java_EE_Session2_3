@@ -113,6 +113,31 @@ public class ManagerSession implements ManagerSessionRemote {
         return result.intValue();
     }
     
+    @Override
+    public Set<String> getBestCustomers() {
+        List<String> resultList = em.createNamedQuery("getBestCustomers")
+                .getResultList();
+        return new HashSet<>(resultList);
+    }
     
+    @Override
+    public CarType getMostPopularCarType(String crcName, int year) {
+        List<CarType[]> resultList = em.createNamedQuery("mostPopularCarTypeOfCompany")
+                .setParameter("companyName", crcName)
+                .setParameter("year", year)
+                .getResultList()
+                ;
+        return resultList.get(0)[0];
+    }
+    
+    @Override
+    public int getNbOfReservationsBy(String clientName) {
+        List<Reservation> resultList = em.createNamedQuery("allReservationsForRenter")
+                .setParameter("carRenter", clientName)
+                .getResultList()
+                ;
+        
+        return resultList.size();
+    }
 
 }

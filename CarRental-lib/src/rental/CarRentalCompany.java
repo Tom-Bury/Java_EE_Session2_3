@@ -40,15 +40,51 @@ import javax.persistence.Transient;
 //                    + "WHERE crc.regions.contains(:region) "
 //                    + "AND crc.isAvailable(ct, :start, :end)")
 //    
+
+/*    
+    @NamedQuery (
+            name = "allAvailableCarTypesOfCompany",
+            query = "SELECT DISTINCT c.type FROM Car c, CarRentalCompany crc "
+                + "WHERE c MEMBER OF crc.c "
+                + "AND crc.name = :companyName"
+                + "AND c.isAvailable(ct, :start, :end)")
+    ),
+*/  
+    
     @NamedQuery (
             name = "getNbReservations",
             query = "SELECT COUNT(resv) "
                     + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
                     + "WHERE crc.name = :crcName "
-                    + "AND car.type.name = :carType")
+                    + "AND car.type.name = :carType"
+    ),
     
+    @NamedQuery (
+            name = "getBestCustomers",
+            query = "SELECT r.carRenter, COUNT(carRenter) FROM  Reservation r"
+                + "GROUP BY carRenter "
+                + "ORDER BY total DESC"
+    ),
+   
+    /*
+    @NamedQuery (
+            name = "mostPopularCarTypeOfCompany",
+            query = "SELECT ct, COUNT(ct) AS total FROM Reservation r, CarType ct "
+                + "WHERE r.rentalCompany = :companyName "
+                  "AND r.isInYear = :year"
+                + "AND ct.companyName = :companyName "
+                + "GROUP BY ct "
+                + "ORDER BY total DESC"
+           
+    ),
+*/
+    @NamedQuery (
+            name = "allReservationsForRenter",
+            query = "SELECT r FROM Reservation r"
+                + "WHERE r.carRenter = :clientName "
     
-
+    )
+    
 })
 
 
