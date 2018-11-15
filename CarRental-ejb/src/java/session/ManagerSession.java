@@ -55,16 +55,20 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public Set<Integer> getCarIds(String company, String type) {
-        //TODO
         Set<Integer> out = new HashSet<Integer>();
-        try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
-                out.add(c.getId());
-            }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+        
+        List<Object> result = em.createNamedQuery("getCarIds")
+                .setParameter("crcName", company)
+                .setParameter("carType", type)
+                .getResultList();
+        
+        for (Object id : result) {
+            int intId = (int) id;
+            
+            out.add(intId);
         }
+        
+        
         return out;
     }
 

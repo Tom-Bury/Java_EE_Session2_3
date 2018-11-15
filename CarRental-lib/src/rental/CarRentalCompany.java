@@ -55,6 +55,13 @@ import javax.persistence.Transient;
                     + "WHERE crc.name = :crcName "
                     + "AND car.id = :carId"),
     
+    @NamedQuery (
+        name = "getCarIds",
+        query = "SELECT DISTINCT car.id "
+                + "FROM CarRentalCompany crc, IN(crc.cars) car "
+                + "WHERE crc.name = :crcName "
+                + "AND car.type.name = :carType"),
+    
     
     @NamedQuery (
             name = "getAllClientsAndNbReservations",

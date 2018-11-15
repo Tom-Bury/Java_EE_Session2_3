@@ -149,18 +149,9 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
         printMethodInfo("getMostPopularCarType");
-
-
-        Set<CarType> result = ms.getCarTypes(carRentalCompanyName);
-        System.out.println("Found following carTyppes in company " + carRentalCompanyName);
-        
-        for (CarType ct : result) {
-            System.out.println("\t" + ct.toString());
-        }
-        
-        return null;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
