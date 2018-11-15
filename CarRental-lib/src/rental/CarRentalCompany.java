@@ -48,6 +48,13 @@ import javax.persistence.Transient;
                     + "WHERE crc.name = :crcName"
             ),
     
+    @NamedQuery (
+            name = "getNbReservationsForCar",
+            query = "SELECT COUNT(resv) "
+                    + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
+                    + "WHERE crc.name = :crcName "
+                    + "AND car.id = :carId"),
+    
     
     @NamedQuery (
             name = "getAllClientsAndNbReservations",
