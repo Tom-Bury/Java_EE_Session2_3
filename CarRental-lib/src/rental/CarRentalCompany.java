@@ -38,14 +38,22 @@ import javax.persistence.Transient;
 //            query = "SELECT ct.name, MIN(ct.rentalPricePerDay) "
 //                    + "FROM CarRentalCompany crc, IN(crc.carTypes) ct "
 //                    + "WHERE crc.regions.contains(:region) "
-//                    + "AND crc.isAvailable(ct, :start, :end)")
+//                    + "AND crc.isAvailable(ct, :start, :end)"),
 //    
     @NamedQuery (
             name = "getNbReservations",
             query = "SELECT COUNT(resv) "
                     + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
                     + "WHERE crc.name = :crcName "
-                    + "AND car.type.name = :carType")
+                    + "AND car.type.name = :carType"),
+    
+    @NamedQuery (
+            name = "getAllClientsAndNbReservations",
+            query = "SELECT resv.carRenter, COUNT(resv.carRenter) AS nb_resv "
+                    + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
+                    + "GROUP BY resv.carRenter "
+                    + "ORDER BY nb_resv DESC")
+
     
     
 

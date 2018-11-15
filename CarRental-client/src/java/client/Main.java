@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -132,7 +133,26 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("getBestClients");
+        
+        List<String> result = ms.getBestClients();
+        
+        System.out.println("Best clients are: ");
+        
+        Set<String> resultSet = new HashSet<String>();
+        
+        for (String client : result) {
+            
+            System.out.println("\t" + client);
+          
+            
+            resultSet.add(client.toString());
+        }
+        
+        
+
+        
+        return resultSet;
     }
 
     @Override

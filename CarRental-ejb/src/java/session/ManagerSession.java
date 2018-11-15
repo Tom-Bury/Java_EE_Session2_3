@@ -113,6 +113,32 @@ public class ManagerSession implements ManagerSessionRemote {
         return result.intValue();
     }
     
+    @Override
+    public List<String> getBestClients() {
+        List<Object[]> result = em.createNamedQuery("getAllClientsAndNbReservations").getResultList();
+        
+        List<String> bestClients = new ArrayList<String>();
+        
+        
+        
+        if (result.isEmpty()) {
+            return null;
+        }
+        
+        long maxNbResv = (long) result.get(0)[1];
+        
+        for (Object[] clientAndNb : result) {
+            if (maxNbResv == (long) clientAndNb[1]) {
+                bestClients.add((String) clientAndNb[0]);
+            }
+            else {
+                break;
+            }
+        }
+        
+        
+        return bestClients;
+    }
     
 
 }
