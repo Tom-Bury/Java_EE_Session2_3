@@ -136,32 +136,36 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         printMethodInfo("getBestClients");
         
         List<String> result = ms.getBestClients();
-        
+        Set<String> resultSet = new HashSet<String>();
+                
         System.out.println("Best clients are: ");
         
-        Set<String> resultSet = new HashSet<String>();
-        
         for (String client : result) {
-            
             System.out.println("\t" + client);
-          
-            
             resultSet.add(client.toString());
         }
-        
-        
-
-        
         return resultSet;
     }
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printMethodInfo("getMostPopularCarType");
+
+
+        Set<CarType> result = ms.getCarTypes(carRentalCompanyName);
+        System.out.println("Found following carTyppes in company " + carRentalCompanyName);
+        
+        for (CarType ct : result) {
+            System.out.println("\t" + ct.toString());
+        }
+        
+        return null;
     }
 
     @Override
     protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
+        printMethodInfo("getNumberOfReservationsBy");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -174,9 +178,7 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         return result;
     }
     
-    
- 
-    
+
     private void printMethodInfo(String methodName) {
         System.out.println("\n\n\n============ " + methodName +" ============\n" );
     }

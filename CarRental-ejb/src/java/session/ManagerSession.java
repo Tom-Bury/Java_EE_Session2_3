@@ -30,17 +30,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void registerCompany(List<Car> cars, String name, List<String> regions) {
-        
-//        for (Car c : cars) {
-//            em.persist(c.getType());
-////            System.out.println("Persisted cartype: " + c.getType().getName());
-//        }
-//        
-//        for (Car c : cars) {
-//            em.persist(c);
-////            System.out.println("Persisted car: " + c.toString());
-//        }
-        
+                
         CarRentalCompany crc  = new CarRentalCompany(name, regions, new ArrayList<Car>());
 
         em.persist(crc);
@@ -48,39 +38,24 @@ public class ManagerSession implements ManagerSessionRemote {
         for (Car c : cars) {
             crc.addCar(c);
         }
-        /*
-        CarRentalCompany crc = new CarRentalCompany(name, regions, new ArrayList<Car>());
-        em.persist(crc);
-        
-        for (Car car : cars) {
-            storeAtCompanyWithRef(car, crc);
-        }
-        */
     }
     
-    /*    
-    private void storeAtCompanyWithRef(Car car, CarRentalCompany carRentalCompany) {
-        CarType carType = em.find(CarType.class, car.getType().getId());
-        if (carType != null) {
-            car.setType(carType);
-        }
-
-        carRentalCompany.addCar(car);
-    }   
-    */
     
     @Override
     public Set<CarType> getCarTypes(String company) {
-        try {
-            return new HashSet<CarType>(RentalStore.getRental(company).getAllTypes());
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+        List<CarType> result = em.createNamedQuery("getCarTypes")
+                .setParameter("crcName", company)
+                .getResultList();
+        
+        Set<CarType> resultSet = new HashSet<CarType>();
+        resultSet.addAll(result);
+        
+        return resultSet;               
     }
 
     @Override
     public Set<Integer> getCarIds(String company, String type) {
+        //TODO
         Set<Integer> out = new HashSet<Integer>();
         try {
             for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -95,6 +70,7 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
+        //TODO
         try {
             return RentalStore.getRental(company).getCar(id).getReservations().size();
         } catch (IllegalArgumentException ex) {
@@ -118,12 +94,12 @@ public class ManagerSession implements ManagerSessionRemote {
         List<Object[]> result = em.createNamedQuery("getAllClientsAndNbReservations").getResultList();
         
         List<String> bestClients = new ArrayList<String>();
-        
-        
-        
+
         if (result.isEmpty()) {
             return null;
         }
+        
+        // Query result contains all client-nbResv pairs, sorted from most resv to least
         
         long maxNbResv = (long) result.get(0)[1];
         
@@ -134,9 +110,7 @@ public class ManagerSession implements ManagerSessionRemote {
             else {
                 break;
             }
-        }
-        
-        
+        }   
         return bestClients;
     }
     
