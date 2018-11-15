@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -62,6 +63,18 @@ import javax.persistence.Transient;
                 + "WHERE crc.name = :crcName "
                 + "AND car.type.name = :carType"),
     
+    @NamedQuery (
+            name = "getCheapestCarType",
+            query = "SELECT car.type.name, car.type.rentalPricePerDay "
+                    + "FROM CarRentalCompany crc, IN(crc.cars) car "
+                    + "WHERE :region MEMBER OF crc.regions "
+                    + "AND NOT EXISTS "
+                        + "(SELECT res "
+                        + "FROM IN(car.reservations) res "
+                        + "WHERE (:start >= res.startDate AND :start <= res.endDate) "
+                        + "OR (:end >= res.startDate AND :end <= res.endDate)) "
+                    + "ORDER BY car.type.rentalPricePerDay ASC"),
+    
     
     @NamedQuery (
             name = "getAllClientsAndNbReservations",
@@ -98,6 +111,7 @@ public class CarRentalCompany implements Serializable{
     @OneToMany(cascade = CascadeType.ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
     
+    @ElementCollection
     private List<String> regions = new ArrayList<String>();
 
 	

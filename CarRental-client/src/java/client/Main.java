@@ -30,7 +30,6 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO: use updated manager interface to load cars into companies
         
         CrcData hertzData = loadData("hertz.csv");
         //CarRentalCompany hertz = new CarRentalCompany(hertzData.name, hertzData.regions, hertzData.cars);
@@ -86,8 +85,14 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         ReservationConstraints reservationConstraints = new ReservationConstraints(start, end, carType, region);
         Quote q = session.createQuote(reservationConstraints);
         
-        System.out.println("--Quote created!--");
-        System.out.println(q.toString());
+        if (q != null) {
+            System.out.println("-- Quote created! --");
+            System.out.println(q.toString());
+        }
+        else {
+            System.out.println("-- No quote created --");
+        }
+
             
         
     }
@@ -111,7 +116,13 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
         printMethodInfo("getCheapestCarType");
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        String cheapest = session.getCheapestCarType(start, end, region);
+        
+        System.out.println("Cheapest car type is: ");
+        System.out.println("\t" + cheapest);
+        
+        return cheapest;
     }
     
     
