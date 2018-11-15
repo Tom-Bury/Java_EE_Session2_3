@@ -1,5 +1,7 @@
 package rental;
 
+import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -41,4 +43,13 @@ public class Reservation extends Quote {
         return String.format("Reservation for %s from %s to %s at %s\nCar type: %s\tCar: %s\nTotal price: %.2f", 
                 getCarRenter(), getStartDate(), getEndDate(), getRentalCompany(), getCarType(), getCarId(), getRentalPrice());
     }	
+    
+    
+    public boolean isInYear(int year) {
+    	Date startDate = getStartDate();
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(startDate);
+    	int startYear = cal.get(Calendar.YEAR);
+ 		return year == startYear;
+	}
 }

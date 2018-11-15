@@ -22,4 +22,8 @@ public interface ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type);
     
     public List<String> getBestClients();
+    
+    public CarType getMostPopularCarType(String crcName, int year);
+    
+    public int getNbOfReservationsBy(String clientName);
 }
