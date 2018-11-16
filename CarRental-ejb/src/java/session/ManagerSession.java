@@ -1,5 +1,8 @@
 package session;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +14,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import rental.Car;
 import rental.CarRentalCompany;
 import rental.CarType;
@@ -122,23 +126,39 @@ public class ManagerSession implements ManagerSessionRemote {
     
     @Override
     public CarType getMostPopularCarType(String crcName, int year) {
-        List<CarType[]> resultList = em.createNamedQuery("mostPopularCarTypeOfCompany")
-                .setParameter("companyName", crcName)
-                .setParameter("year", year)
-                .getResultList()
-                ;
-        return resultList.get(0)[0];
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        
+        Date start = null;
+        Date end = null;
+        
+        try {
+            start = sdf.parse("01-01-" + year);
+            end = sdf.parse("31-12-" + year);
+        } catch (ParseException ex) {
+            System.err.println("Could not create the start & end dates to check dates in getMostPopularCarType query.");
+            ex.printStackTrace();
+        }
+        
+        List<Object[]> resultList = em.createNamedQuery("getMostPopularCarTypeIn")
+                .setParameter("crcName", crcName)
+                .setParameter("start", start, TemporalType.DATE)
+                .setParameter("end", end, TemporalType.DATE)
+                .getResultList();
+        
+        // Query result contains all carType-nbResv pairs, sorted from most resv to least
+        // The reservation start date must be between 01-01-year & 31-12-year
+        
+        return (CarType) resultList.get(0)[0];
     }
     
     
     @Override
     public int getNbOfReservationsBy(String clientName) {
-        List<Reservation> resultList = em.createNamedQuery("allReservationsForRenter")
-                .setParameter("carRenter", clientName)
-                .getResultList()
-                ;
+        int result = (int) em.createNamedQuery("getNbReservationsForRenter")
+                .setParameter("renter", clientName)
+                .getSingleResult();
         
-        return resultList.size();
+        return result;
     }
     
 

@@ -94,34 +94,6 @@ public class Car implements Serializable{
 
     public Set<Reservation> getReservations() {
         return reservations;
-    }
-
-
-    
-    
-    /***********
-     * COMPANY *
-     ***********/
-    
-//    public CarRentalCompany getCrc() {
-//        return crc;
-//    }
-//
-//    public void setCrc(CarRentalCompany crc) {
-//        this.crc = crc;
-//    }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (!(obj instanceof Car)) {
-//            return false;
-//        }
-//        else {
-//            return this.getId() == ((Car) obj).getId();
-//        }
-//    }
-    
-    
-    
-    
+    }    
+        
 }

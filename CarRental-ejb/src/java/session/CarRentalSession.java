@@ -81,13 +81,13 @@ public class CarRentalSession implements CarRentalSessionRemote {
             try {
                 q = crc.createQuote(constraints, renter);
                 this.quotes.add(q);
+                return q;
             } catch (Exception e) {
                 System.out.println("\tCouldn't create quote at company " + crc.getName());
             }    
         }
         
-        
-        return q;
+        throw new ReservationException("No company was found that could create a quote satisfying the given ReservationConstraints.");
     }
 
     @Override

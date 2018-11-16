@@ -83,18 +83,17 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         printMethodInfo("addQuoteToSession");
         
         ReservationConstraints reservationConstraints = new ReservationConstraints(start, end, carType, region);
-        Quote q = session.createQuote(reservationConstraints);
+        Quote q = null;
         
-        if (q != null) {
-            System.out.println("-- Quote created! --");
-            System.out.println(q.toString());
+        try {
+            q = session.createQuote(reservationConstraints);
+        } catch (ReservationException e) {
+            System.out.println("-- Could not create quote. --");
+            throw e;
         }
-        else {
-            System.out.println("-- No quote created --");
-        }
-
-            
         
+        System.out.println("-- Quote created! --");
+        System.out.println(q.toString());
     }
 
     @Override
@@ -160,28 +159,22 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-
         printMethodInfo("getMostPopularCarType");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        CarType result = ms.getMostPopularCarType(carRentalCompanyName, year);
         
-        /*
-        CarType mostPopular = ms.getMostPopularCarType(carRentalCompanyName, year);
-         System.out.println("Most popular car type in company " + carRentalCompanyName + " in year " + year +
-                " is: " + mostPopular.getName());
+        System.out.println("Most popular car type in company " + carRentalCompanyName + " in year " + year + " is: ");
+        System.out.println("\t" + result.getName());
         
-        */
-        
+        return result;
     }
 
     @Override
     protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
         printMethodInfo("getNumberOfReservationsBy");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        /*
+
         int nbRes = ms.getNbOfReservationsBy(clientName);
-        return nbRes;
-        */
-        
+        return nbRes;        
     }
 
     @Override

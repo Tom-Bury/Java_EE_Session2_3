@@ -33,35 +33,44 @@ import javax.persistence.Transient;
             name = "allCrcNames",
             query = "SELECT crc.name FROM CarRentalCompany crc"
     ),
-    
-
+   
     @NamedQuery (
             name = "getNbReservations",
             query = "SELECT COUNT(resv) "
                     + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
                     + "WHERE crc.name = :crcName "
-                    + "AND car.type.name = :carType"),
+                    + "AND car.type.name = :carType"
+    ),
     
     @NamedQuery (
             name = "getCarTypes",
             query = "SELECT crc.carTypes "
                     + "FROM CarRentalCompany crc "
                     + "WHERE crc.name = :crcName"
-            ),
+    ),
     
     @NamedQuery (
             name = "getNbReservationsForCar",
             query = "SELECT COUNT(resv) "
                     + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
                     + "WHERE crc.name = :crcName "
-                    + "AND car.id = :carId"),
+                    + "AND car.id = :carId"
+    ),
+    
+    @NamedQuery (
+        name = "getNbReservationsForRenter",
+        query = "SELECT COUNT(resv) "
+                + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
+                + "WHERE resv.carRenter = :renter"
+    ),
     
     @NamedQuery (
         name = "getCarIds",
         query = "SELECT DISTINCT car.id "
                 + "FROM CarRentalCompany crc, IN(crc.cars) car "
                 + "WHERE crc.name = :crcName "
-                + "AND car.type.name = :carType"),
+                + "AND car.type.name = :carType"
+    ),
     
     @NamedQuery (
             name = "getCheapestCarType",
@@ -73,19 +82,28 @@ import javax.persistence.Transient;
                         + "FROM IN(car.reservations) res "
                         + "WHERE (:start >= res.startDate AND :start <= res.endDate) "
                         + "OR (:end >= res.startDate AND :end <= res.endDate)) "
-                    + "ORDER BY car.type.rentalPricePerDay ASC"),
+                    + "ORDER BY car.type.rentalPricePerDay ASC"
+    ),
     
+    @NamedQuery (
+            name = "getMostPopularCarTypeIn",
+            query = "SELECT car.type, COUNT(res) AS nb_res "
+                    + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) res "
+                    + "WHERE crc.name = :crcName "
+                    + "AND res.startDate >= :start "
+                    + "AND res.startDate <= :end "
+                    + "GROUP BY car.type "
+                    + "ORDER BY nb_res DESC"
+    ),
     
     @NamedQuery (
             name = "getAllClientsAndNbReservations",
             query = "SELECT resv.carRenter, COUNT(resv.carRenter) AS nb_resv "
                     + "FROM CarRentalCompany crc, IN(crc.cars) car, IN(car.reservations) resv "
                     + "GROUP BY resv.carRenter "
-                    + "ORDER BY nb_resv DESC")
-
+                    + "ORDER BY nb_resv DESC"
+    )  
     
-    
-
 })
 
 
@@ -98,12 +116,6 @@ public class CarRentalCompany implements Serializable{
     
     @Id
     private String name;
-    
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy="crc")
-//    private List<Car> cars = new ArrayList<Car>();
-//    
-//    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "crc")
-//    private Set<CarType> carTypes = new HashSet<CarType>();
     
     @OneToMany(cascade = CascadeType.ALL)
     private List<Car> cars = new ArrayList<Car>();
@@ -129,9 +141,7 @@ public class CarRentalCompany implements Serializable{
         this.cars = cars;
         setRegions(regions);
         for (Car car : cars) {
-//            car.setCrc(this);
             CarType type = car.getType();
-//            type.setCrc(this);
             carTypes.add(type);
         }
         
@@ -234,18 +244,12 @@ public class CarRentalCompany implements Serializable{
         return availableCars;
     }
 
-    public void addCar(Car c) {
-//        if (c.getCrc() != this) {
-//            c.setCrc(this);
-//        }
-//        
-//        if (c.getType().getCrc() != this) {
-//            c.getType().setCrc(this);
-//        }
-        
+    public void addCar(Car c) {        
         this.cars.add(c);
         this.carTypes.add(c.getType());
     }
+    
+    
     /****************
      * RESERVATIONS *
      ****************/

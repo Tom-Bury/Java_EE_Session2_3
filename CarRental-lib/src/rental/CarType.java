@@ -25,13 +25,6 @@ public class CarType implements Serializable{
     private float trunkSpace;
     
     
-//    @ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name="CRC_ID")
-//    private CarRentalCompany crc;
-
-
-
-    
     /***************
      * CONSTRUCTOR *
      ***************/
@@ -109,16 +102,5 @@ public class CarType implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-    
-    /***********
-     * COMPANY *
-     ***********/
-    
-//    public CarRentalCompany getCrc() {
-//        return crc;
-//    }
-//
-//    public void setCrc(CarRentalCompany crc) {
-//        this.crc = crc;
-//    }
+   
 }
